@@ -9,40 +9,19 @@ import { db } from "@/app/_lib/prisma";
 
 interface SummaryCardsProps {
   month: string;
+  balence: number;
+  depositTotal: number;
+  expenseTotal: number;
+  investimentTotal: number;
 }
 
-const SummaryCards = async ({ month }: SummaryCardsProps) => {
-  const where = {
-    date: {
-      gte: new Date(`2025-${month}-01`),
-      lt: new Date(new Date(`2025-${month}-31`)),
-    },
-  };
-  const depositTotal = Number(
-    (
-      await db.transaction.aggregate({
-        where: { ...where, type: "DEPOSIT" },
-        _sum: { amount: true },
-      })
-    )?._sum?.amount || 0,
-  );
-  const investimentTotal = Number(
-    (
-      await db.transaction.aggregate({
-        where: { ...where, type: "INVESTMENT" },
-        _sum: { amount: true },
-      })
-    )?._sum?.amount,
-  );
-  const expenseTotal = Number(
-    (
-      await db.transaction.aggregate({
-        where: { ...where, type: "EXPENSE" },
-        _sum: { amount: true },
-      })
-    )?._sum?.amount,
-  );
-  const balence = depositTotal - investimentTotal - expenseTotal;
+const SummaryCards = async ({
+  month,
+  balence,
+  depositTotal,
+  expenseTotal,
+  investimentTotal,
+}: SummaryCardsProps) => {
   return (
     <div className="space-y-4">
       {/* first card */}
@@ -51,6 +30,7 @@ const SummaryCards = async ({ month }: SummaryCardsProps) => {
         title="Saldo"
         amount={balence}
         size="large"
+        className="bg-gray-500/10"
       />
       {/* outhers cards */}
       <div className="grid grid-cols-3 gap-6">
@@ -58,6 +38,7 @@ const SummaryCards = async ({ month }: SummaryCardsProps) => {
           icon={<PiggyBankIcon size={16} />}
           title="Investimento"
           amount={investimentTotal}
+          className="bg-gray-500/5"
         />
         <SummaryCard
           icon={<TrendingUpIcon size={16} className="text-primary" />}
