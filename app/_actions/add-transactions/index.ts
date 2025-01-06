@@ -11,6 +11,7 @@ import { addTrasactionSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 
 interface addTrasactionParams {
+  id?: string;
   name: string;
   amount: number;
   type: TransactionType;
@@ -25,8 +26,12 @@ export const addTrasaction = async (params: addTrasactionParams) => {
   if (!userId) {
     throw new Error("Unauthorized");
   }
-  await db.transaction.create({
-    data: { ...params, userId },
+  await db.transaction.upsert({
+    where: {
+      id: params.id,
+    },
+    update: { ...params, userId },
+    create: { ...params, userId },
   });
   revalidatePath("/transactions");
 };
