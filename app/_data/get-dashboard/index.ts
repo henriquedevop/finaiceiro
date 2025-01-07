@@ -71,6 +71,11 @@ export const getDashboard = async (month: string) => {
       (Number(category._sum.amount) / Number(expenseTotal)) * 100,
     ),
   }));
+  const lastTransactions = await db.transaction.findMany({
+    where,
+    orderBy: { date: "desc" },
+    take: 10,
+  });
   return {
     balence,
     depositTotal,
@@ -78,5 +83,6 @@ export const getDashboard = async (month: string) => {
     expenseTotal,
     typePercentage,
     TotalExpensePerCategory,
+    lastTransactions,
   };
 };
