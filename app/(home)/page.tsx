@@ -7,6 +7,7 @@ import TimeSelect from "./components/time-select";
 import { isMatch } from "date-fns";
 import TrasactionDonutChart from "./components/transactions-donut-chart";
 import { getDashboard } from "../_data/get-dashboard";
+import ExpensesPerCategory from "./components/expenses-per-category";
 
 interface HomeProps {
   searchParams: { month: string };
@@ -37,6 +38,9 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
               <TrasactionDonutChart
                 typesPercentage={dashboard.typePercentage}
                 {...dashboard}
+              />
+              <ExpensesPerCategory
+                expensesPerCategory={dashboard.TotalExpensePerCategory}
               />
             </div>
           </div>
